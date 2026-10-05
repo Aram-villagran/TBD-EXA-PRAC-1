@@ -1,0 +1,427 @@
+MySQL Shell 9.7.0
+
+Copyright (c) 2016, 2026, Oracle and/or its affiliates.
+Oracle is a registered trademark of Oracle Corporation and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+Creating a session to 'root@localhost'
+Fetching global names for auto-completion... Press ^C to stop.
+Your MySQL connection id is 11
+Server version: 8.0.45 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3306 ssl  SQL > CREATE DATABASE tbd_exa1;
+Query OK, 1 row affected (0.0258 sec)
+ MySQL  localhost:3306 ssl  SQL > USE tbd_exa1;
+Default schema set to `tbd_exa1`.
+Fetching global names, object names from `tbd_exa1` for auto-completion... Press ^C to stop.
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > CREATE TABLE colegios (
+                                         -> id_colegio INT AUTO_INCREMENT PRIMARY KEY,
+                                         -> nombre_colegio VARCHAR(100) NOT NULL UNIQUE);
+Query OK, 0 rows affected (0.0713 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > CREATE TABLE cursos (
+                                         -> id_curso INT AUTO_INCREMENT PRIMARY KEY,
+                                         -> nombre_curso VARCHAR(100) NOT NULL UNIQUE);
+Query OK, 0 rows affected (0.1043 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > CREATE TABLE aulas (
+                                         -> id_aula INT AUTO_INCREMENT PRIMARY KEY,
+                                         -> codigo_aula VARCHAR(20) NOT NULL,
+                                         -> id_curso INT NOT NULL,
+                                         -> id_colegio INT NOT NULL,
+                                         -> FOREIGN KEY (id_curso) REFERENCES cursos (id_curso), FOREIGN KEY (id_colegio) REFERENCES colegios(id_colegio),
+                                         -> UNIQUE(codigo_aula, id_colegio)
+                                         -> );
+Query OK, 0 rows affected (0.1175 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > CREATE TABLE profesores (
+                                         -> id_profesor INT AUTO_INCREMENT PRIMARY KEY,
+                                         -> nombre_profesor VARCHAR(100) NOT NULL,
+                                         -> id_colegio INT NOT NULL,
+                                         -> FOREIGN KEY (id_colegio) REFERENCES colegios (id_colegio)
+                                         -> );
+Query OK, 0 rows affected (0.1074 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > CREATE TABLE editoriales (
+                                         -> id_editorial INT AUTO_INCREMENT PRIMARY KEY,
+                                         -> titulo_libro VARCHAR (255) NOT NULL,
+                                         -> id_editorial INT NOT NULL,
+                                         -> FOREIGN KEY (id_editorial) REFERENCES editoriales(id_editorial)
+                                         -> );
+ERROR: 1060 (42S21): Duplicate column name 'id_editorial'
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > CREATE TABLE asignaturas(
+                                         -> id_asignatura INT AUTO_INCREMENT PRIMARY KEY,
+                                         -> nombre_asignatura VARCHAR(150) NOT NULL UNIQUE
+                                         -> );
+Query OK, 0 rows affected (0.0961 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > CREATE TABLE prestamos(
+                                         -> id_prestamo INT AUTO_INCREMENT PRIMARY KEY,
+                                         -> id_profesor INT NOT NULL,
+                                         -> id_aula INT NOT NUL,
+                                         -> id_libro INT NOT NULL,
+                                         -> id_asignatura INT NOT NULL,
+                                         -> fecha_prestamo DATE NOT NULL,
+                                         -> FOREIGN KEY (id_profesor) REFERENCES profesores (id_profesor),
+                                         -> FOREIGN KEY (id_aula) REFERENCES aulas (id_aula),
+                                         -> FOREIGN KEY (id_libro) REFERENCES libros(id_libro),
+                                         -> FOREIGN KEY (id_asignatura) REFERENCES asignaturas(id_asignatura)
+                                         -> );
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'NUL,
+id_libro INT NOT NULL,
+id_asignatura INT NOT NULL,
+fecha_prestamo DATE NOT ' at line 4
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > CREATE TABLE prestamos( id_prestamo INT AUTO_INCREMENT PRIMARY KEY, id_profesor INT NOT NULL, id_aula INT NOT NULL, id_libro INT NOT NULL, id_asignatura INT NOT NULL, fecha_prestamo DATE NOT NULL, FOREIGN KEY (id_profesor) REFERENCES profesores (id_profesor), FOREIGN KEY (id_aula) REFERENCES aulas (id_aula), FOREIGN KEY (id_libro) REFERENCES libros(id_libro), FOREIGN KEY (id_asignatura) REFERENCES asignaturas(id_asignatura) );
+ERROR: 1824 (HY000): Failed to open the referenced table 'libros'
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > CREATE TABLE libros (
+                                         -> id_libro INT AUTO_INCREMENT PRIMARY KEY,
+                                         -> titulo_libro VARCHAR(255) NOT NULL,
+                                         -> id_editorial INT NOT NULL,
+                                         -> FOREIGN KEY (id_editorial) REFERENCES editoriales(id_editorial));
+ERROR: 1824 (HY000): Failed to open the referenced table 'editoriales'
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > drop table editoriales;
+ERROR: 1051 (42S02): Unknown table 'tbd_exa1.editoriales'
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > drop table;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL >  CREATE TABLE editoriales (
+                                         ->     ->   id_editorial INT AUTO_INCREMENT PRIMARY KEY,
+                                         ->     ->   nombre_editorial VARCHAR(150) NOT NULL UNIQUE
+                                         ->     -> );
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '->   id_editorial INT AUTO_INCREMENT PRIMARY KEY,
+    ->   nombre_editorial VARC' at line 2
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > DROP TABLE editoriales, libros;
+ERROR: 1051 (42S02): Unknown table 'tbd_exa1.editoriales,tbd_exa1.libros'
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > DROP TABLE IF EXISTS editoriales, libros;
+Query OK, 0 rows affected, 2 warnings (0.0463 sec)
+Note (code 1051): Unknown table 'tbd_exa1.editoriales'
+Note (code 1051): Unknown table 'tbd_exa1.libros'
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > CREATE TABLE libros(
+                                         ->    id_libro INT AUTO_INCREMENT PRIMARY KEY,
+                                         ->     ->   titulo_libro VARCHAR(255) NOT NULL,
+                                         ->     ->   id_editorial INT NOT NULL,
+                                         ->     ->   FOREIGN KEY (id_editorial) REFERENCES editoriales(id_editorial)
+                                         -> );
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '->   titulo_libro VARCHAR(255) NOT NULL,
+    ->   id_editorial INT NOT NULL,
+   ' at line 3
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > CREATE TABLE libros(    id_libro INT AUTO_INCREMENT PRIMARY KEY,   titulo_libro VARCHAR(255) NOT NULL, id_editorial INT NOT NULL, FOREIGN KEY (id_editorial) REFERENCES editoriales(id_editorial) );
+ERROR: 1824 (HY000): Failed to open the referenced table 'editoriales'
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > show table editoriales;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'edDROP DATABASE IF EXISTS tbd_exa1;
+Query OK, 5 rows affected (0.1550 sec)SQL > DROP DATABASE IF EXISTS tbd_exa1;
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > CREATE DATABASE tbd_exa1;
+Query OK, 1 row affected (0.0535 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > USE tbd_exa1;
+Default schema set to `tbd_exa1`.
+Fetching global names, object names from `tbd_exa1` for auto-completion... Press ^C to stop.
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > CREATE TABLE colegios(
+                                         -> id_colegio INT AUTO_INCREMENT PRIMARY KEY,
+                                         -> nombre_colegio VARCHAR(100) NOT NULL));
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > CREATE TABLE colegios( id_colegio INT AUTO_INCREMENT PRIMARY KEY, nombre_colegio VARCHAR(100) NOT NULL));
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > CREATE TABLE colegios( id_colegio INT AUTO_INCREMENT PRIMARY KEY, nombre_colegio VARCHAR(100) NOT NULL)
+                                         -> );
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 2
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > CREATE TABLE colegios( id_colegio INT AUTO_INCREMENT PRIMARY KEY, nombre_colegio VARCHAR(100) NOT NULL );
+Query OK, 0 rows affected (0.1122 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > CREATE TABLE editoriales (
+                                         ->     id_editorial INT AUTO_INCREMENT PRIMARY KEY,
+                                         ->     nombre_editorial VARCHAR(100) NOT NULL
+                                         -> );
+Query OK, 0 rows affected (0.0812 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > CREATE TABLE libros (
+                                         ->     id_libro INT AUTO_INCREMENT PRIMARY KEY,
+                                         ->     titulo VARCHAR(150) NOT NULL,
+                                         ->     id_editorial INT,
+                                         ->     FOREIGN KEY (id_editorial) REFERENCES editoriales(id_editorial)
+                                         -> );
+Query OK, 0 rows affected (0.0589 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > CREATE TABLE profesores (
+                                         ->     id_profesor INT AUTO_INCREMENT PRIMARY KEY,
+                                         ->     nombre_profesor VARCHAR(100) NOT NULL,
+                                         ->     aula VARCHAR(10),
+                                         ->     curso VARCHAR(20),
+                                         ->     id_colegio INT,
+                                         ->     FOREIGN KEY (id_colegio) REFERENCES colegios(id_colegio)
+                                         -> );
+Query OK, 0 rows affected (0.1147 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > CREATE TABLE asignaturas (
+                                         ->     id_asignatura INT AUTO_INCREMENT PRIMARY KEY,
+                                         ->     nombre_asignatura VARCHAR(100) NOT NULL
+                                         -> );
+Query OK, 0 rows affected (0.0986 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > CREATE TABLE prestamos (
+                                         ->     id_prestamo INT AUTO_INCREMENT PRIMARY KEY,
+                                         ->     id_profesor INT,
+                                         ->     id_asignatura INT,
+                                         ->     id_libro INT,
+                                         ->     fecha_prestamo DATE,
+                                         ->     FOREIGN KEY (id_profesor) REFERENCES profesores(id_profesor),
+                                         ->     FOREIGN KEY (id_asignatura) REFERENCES asignaturas(id_asignatura),
+
+                                         ->     FOREIGN KEY (id_libro) REFERENCES libros(id_libro)
+                                         -> );
+Query OK, 0 rows affected (0.1351 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > INSERT INTO colegios (nombre_colegio) VALUES
+                                         -> ('C.P Cervantes'),
+                                         -> ('C.P Quevedo');
+Query OK, 2 rows affected (0.0830 sec)
+
+Records: 2  Duplicates: 0  Warnings: 0
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > INSERT INTO editoriales (nombre_editorial) VALUES
+                                         -> ('Graó'),
+                                         -> ('Técnicas Rubio'),
+                                         -> ('Prentice Hall'),
+                                         -> ('Temas de Hoy');
+Query OK, 4 rows affected (0.0532 sec)
+
+Records: 4  Duplicates: 0  Warnings: 0
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > INSERT INTO libros (titulo, id_editorial) VALUES
+                                         -> ('Aprender y enseñar en educación infantil', 1),
+                                         -> ('Preescolar Rubio,N56', 2),
+                                         -> ('Educación Infantil N9', 3),
+                                         -> ('Saber educar: guía para Padres y Profesores', 4);
+Query OK, 4 rows affected (0.0520 sec)
+
+Records: 4  Duplicates: 0  Warnings: 0
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > INSERT INTO profesores (nombre_profesor, aula, curso, id_colegio) VALUES
+                                         -> ('Juan Pérez', '1.A01', '1er Grado', 1),
+                                         -> ('Alicia García', '1.B01', '1er Grado', 1),
+                                         -> ('Andrés Fernández', '1.A01', '2do Grado', 1),
+                                         -> ('Juan Méndez', '2.B01', '1er Grado', 2);
+Query OK, 4 rows affected (0.0097 sec)
+
+Records: 4  Duplicates: 0  Warnings: 0
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > INSERT INTO asignaturas (nombre_asignatura) VALUES
+                                         -> ('Pensamiento Lógico'),
+                                         -> ('Escritura'),
+                                         -> ('Pensamiento Numérico'),
+                                         -> ('Pensamiento Espacial, Temporal y causal'),
+                                         -> ('Ingles');
+Query OK, 5 rows affected (0.0317 sec)
+
+Records: 5  Duplicates: 0  Warnings: 0
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > INSERT INTO prestamos (id_profesor, id_asignatura, id_libro, fecha_prestamo) VALUES
+                                         -> (1, 1, 1, '2010-09-09'),
+                                         -> (1, 2, 2, '2010-05-05'),
+                                         -> (1, 3, 1, '2010-05-05'),
+                                         -> (2, 4, 3, '2010-05-06'),
+                                         -> (2, 3, 1, '2010-05-06'),
+                                         -> (3, 2, 1, '2010-09-09'),
+                                         -> (3, 5, 4, '2010-05-05'),
+                                         -> (4, 1, 4, '2010-12-18'),
+                                         -> (4, 3, 1, '2010-05-06');
+Query OK, 9 rows affected (0.0261 sec)
+
+Records: 9  Duplicates: 0  Warnings: 0
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > SHOW TABLES;
++--------------------+
+| Tables_in_tbd_exa1 |
++--------------------+
+| asignaturas        |
+| colegios           |
+| editoriales        |
+| libros             |
+| prestamos          |
+| profesores         |
++--------------------+
+6 rows in set (0.0613 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > DESCRIBE colegios;
++----------------+--------------+------+-----+---------+----------------+
+| Field          | Type         | Null | Key | Default | Extra          |
++----------------+--------------+------+-----+---------+----------------+
+| id_colegio     | int          | NO   | PRI | NULL    | auto_increment |
+| nombre_colegio | varchar(100) | NO   |     | NULL    |                |
++----------------+--------------+------+-----+---------+----------------+
+2 rows in set (0.0903 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > DESCRIBE editoriales;
++------------------+--------------+------+-----+---------+----------------+
+| Field            | Type         | Null | Key | Default | Extra          |
++------------------+--------------+------+-----+---------+----------------+
+| id_editorial     | int          | NO   | PRI | NULL    | auto_increment |
+| nombre_editorial | varchar(100) | NO   |     | NULL    |                |
++------------------+--------------+------+-----+---------+----------------+
+2 rows in set (0.0022 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > DESCRIBE libros;
++--------------+--------------+------+-----+---------+----------------+
+| Field        | Type         | Null | Key | Default | Extra          |
++--------------+--------------+------+-----+---------+----------------+
+| id_libro     | int          | NO   | PRI | NULL    | auto_increment |
+| titulo       | varchar(150) | NO   |     | NULL    |                |
+| id_editorial | int          | YES  | MUL | NULL    |                |
++--------------+--------------+------+-----+---------+----------------+
+3 rows in set (0.0067 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > DESCRIBE profesores;
++-----------------+--------------+------+-----+---------+----------------+
+| Field           | Type         | Null | Key | Default | Extra          |
++-----------------+--------------+------+-----+---------+----------------+
+| id_profesor     | int          | NO   | PRI | NULL    | auto_increment |
+| nombre_profesor | varchar(100) | NO   |     | NULL    |                |
+| aula            | varchar(10)  | YES  |     | NULL    |                |
+| curso           | varchar(20)  | YES  |     | NULL    |                |
+| id_colegio      | int          | YES  | MUL | NULL    |                |
++-----------------+--------------+------+-----+---------+----------------+
+5 rows in set (0.0027 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > DESCRIBE asignaturas;
++-------------------+--------------+------+-----+---------+----------------+
+| Field             | Type         | Null | Key | Default | Extra          |
++-------------------+--------------+------+-----+---------+----------------+
+| id_asignatura     | int          | NO   | PRI | NULL    | auto_increment |
+| nombre_asignatura | varchar(100) | NO   |     | NULL    |                |
++-------------------+--------------+------+-----+---------+----------------+
+2 rows in set (0.0024 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > DESCRIBE prestamos;
++----------------+------+------+-----+---------+----------------+
+| Field          | Type | Null | Key | Default | Extra          |
++----------------+------+------+-----+---------+----------------+
+| id_prestamo    | int  | NO   | PRI | NULL    | auto_increment |
+| id_profesor    | int  | YES  | MUL | NULL    |                |
+| id_asignatura  | int  | YES  | MUL | NULL    |                |
+| id_libro       | int  | YES  | MUL | NULL    |                |
+| fecha_prestamo | date | YES  |     | NULL    |                |
++----------------+------+------+-----+---------+----------------+
+5 rows in set (0.0021 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > SHOW CREATE TABLE colegios;
++----------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table    | Create Table                                                                                                                                                                                                                     |
++----------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| colegios | CREATE TABLE `colegios` (
+  `id_colegio` int NOT NULL AUTO_INCREMENT,
+  `nombre_colegio` varchar(100) NOT NULL,
+  PRIMARY KEY (`id_colegio`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++----------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.0231 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > SHOW CREATE TABLE editoriales;
++-------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table       | Create Table                                                                                                                                                                                                                              |
++-------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| editoriales | CREATE TABLE `editoriales` (
+  `id_editorial` int NOT NULL AUTO_INCREMENT,
+  `nombre_editorial` varchar(100) NOT NULL,
+  PRIMARY KEY (`id_editorial`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++-------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.0010 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > SHOW CREATE TABLE libros;
++--------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table  | Create Table                                                                                                                                                                                                                                                                                                                                                                                      |
++--------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| libros | CREATE TABLE `libros` (
+  `id_libro` int NOT NULL AUTO_INCREMENT,
+  `titulo` varchar(150) NOT NULL,
+  `id_editorial` int DEFAULT NULL,
+  PRIMARY KEY (`id_libro`),
+  KEY `id_editorial` (`id_editorial`),
+  CONSTRAINT `libros_ibfk_1` FOREIGN KEY (`id_editorial`) REFERENCES `editoriales` (`id_editorial`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++--------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.0009 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > SHOW CREATE TABLE profesores;
++------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table      | Create Table                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
++------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| profesores | CREATE TABLE `profesores` (
+  `id_profesor` int NOT NULL AUTO_INCREMENT,
+  `nombre_profesor` varchar(100) NOT NULL,
+  `aula` varchar(10) DEFAULT NULL,
+  `curso` varchar(20) DEFAULT NULL,
+  `id_colegio` int DEFAULT NULL,
+  PRIMARY KEY (`id_profesor`),
+  KEY `id_colegio` (`id_colegio`),
+  CONSTRAINT `profesores_ibfk_1` FOREIGN KEY (`id_colegio`) REFERENCES `colegios` (`id_colegio`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.0013 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > SHOW CREATE TABLE asignaturas;
++-------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table       | Create Table                                                                                                                                                                                                                                 |
++-------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| asignaturas | CREATE TABLE `asignaturas` (
+  `id_asignatura` int NOT NULL AUTO_INCREMENT,
+  `nombre_asignatura` varchar(100) NOT NULL,
+  PRIMARY KEY (`id_asignatura`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++-------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.0199 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > SHOW CREATE TABLE prestamos;
++-----------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table     | Create Table                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
++-----------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| prestamos | CREATE TABLE `prestamos` (
+  `id_prestamo` int NOT NULL AUTO_INCREMENT,
+  `id_profesor` int DEFAULT NULL,
+  `id_asignatura` int DEFAULT NULL,
+  `id_libro` int DEFAULT NULL,
+  `fecha_prestamo` date DEFAULT NULL,
+  PRIMARY KEY (`id_prestamo`),
+  KEY `id_profesor` (`id_profesor`),
+  KEY `id_asignatura` (`id_asignatura`),
+  KEY `id_libro` (`id_libro`),
+  CONSTRAINT `prestamos_ibfk_1` FOREIGN KEY (`id_profesor`) REFERENCES `profesores` (`id_profesor`),
+  CONSTRAINT `prestamos_ibfk_2` FOREIGN KEY (`id_asignatura`) REFERENCES `asignaturas` (`id_asignatura`),
+  CONSTRAINT `prestamos_ibfk_3` FOREIGN KEY (`id_libro`) REFERENCES `libros` (`id_libro`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++-----------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.0011 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > SELECT * FROM colegios;
++------------+----------------+
+| id_colegio | nombre_colegio |
++------------+----------------+
+|          1 | C.P Cervantes  |
+|          2 | C.P Quevedo    |
++------------+----------------+
+2 rows in set (0.0008 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > SELECT * FROM editoriales;
++--------------+------------------+
+| id_editorial | nombre_editorial |
++--------------+------------------+
+|            1 | Graó             |
+|            2 | Técnicas Rubio   |
+|            3 | Prentice Hall    |
+|            4 | Temas de Hoy     |
++--------------+------------------+
+4 rows in set (0.0008 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > SELECT * FROM libros;
++----------+---------------------------------------------+--------------+
+| id_libro | titulo                                      | id_editorial |
++----------+---------------------------------------------+--------------+
+|        1 | Aprender y enseñar en educación infantil    |            1 |
+|        2 | Preescolar Rubio,N56                        |            2 |
+|        3 | Educación Infantil N9                       |            3 |
+|        4 | Saber educar: guía para Padres y Profesores |            4 |
++----------+---------------------------------------------+--------------+
+4 rows in set (0.0009 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > SELECT * FROM profesores;
++-------------+------------------+-------+-----------+------------+
+| id_profesor | nombre_profesor  | aula  | curso     | id_colegio |
++-------------+------------------+-------+-----------+------------+
+|           1 | Juan Pérez       | 1.A01 | 1er Grado |          1 |
+|           2 | Alicia García    | 1.B01 | 1er Grado |          1 |
+|           3 | Andrés Fernández | 1.A01 | 2do Grado |          1 |
+|           4 | Juan Méndez      | 2.B01 | 1er Grado |          2 |
++-------------+------------------+-------+-----------+------------+
+4 rows in set (0.0008 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > SELECT * FROM asignaturas;
++---------------+-----------------------------------------+
+| id_asignatura | nombre_asignatura                       |
++---------------+-----------------------------------------+
+|             1 | Pensamiento Lógico                      |
+|             2 | Escritura                               |
+|             3 | Pensamiento Numérico                    |
+|             4 | Pensamiento Espacial, Temporal y causal |
+|             5 | Ingles                                  |
++---------------+-----------------------------------------+
+5 rows in set (0.0009 sec)
+ MySQL  localhost:3306 ssl  tbd_exa1  SQL > SELECT * FROM prestamos;
++-------------+-------------+---------------+----------+----------------+
+| id_prestamo | id_profesor | id_asignatura | id_libro | fecha_prestamo |
++-------------+-------------+---------------+----------+----------------+
+|           1 |           1 |             1 |        1 | 2010-09-09     |
+|           2 |           1 |             2 |        2 | 2010-05-05     |
+|           3 |           1 |             3 |        1 | 2010-05-05     |
+|           4 |           2 |             4 |        3 | 2010-05-06     |
+|           5 |           2 |             3 |        1 | 2010-05-06     |
+|           6 |           3 |             2 |        1 | 2010-09-09     |
+|           7 |           3 |             5 |        4 | 2010-05-05     |
+|           8 |           4 |             1 |        4 | 2010-12-18     |
+|           9 |           4 |             3 |        1 | 2010-05-06     |
++-------------+-------------+---------------+----------+----------------+
+9 rows in set (0.0009 sec)
